@@ -29,12 +29,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDto userProfile(Long userId) {
         UserEntity userEntity = userRepository.findById(userId);
         return EntityConverter.convertUserEntityToDto(userEntity);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserDto> findAll(Integer pageNumber, Integer pageSize) {
         List<UserEntity> userEntityList = userRepository.findAll(pageNumber, pageSize);
         return userEntityList.stream()

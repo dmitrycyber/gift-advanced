@@ -36,7 +36,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public List<UserEntity> findAll(Integer pageNumber, Integer pageSize) {
-        TypedQuery<UserEntity> query = entityManager.createQuery("select userEntity from UserEntity userEntity", UserEntity.class);
+        TypedQuery<UserEntity> query = entityManager.createQuery("from UserEntity userEntity", UserEntity.class);
         PaginationBuilder.addPagination(pageNumber, pageSize, query);
         return query.getResultList();
     }

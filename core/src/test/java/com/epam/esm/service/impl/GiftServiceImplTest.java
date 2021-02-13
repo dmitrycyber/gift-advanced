@@ -18,17 +18,19 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
 @ExtendWith(MockitoExtension.class)
 class GiftServiceImplTest {
     @Mock
-    private static GiftCertificateRepository giftCertificateRepository;
+    private GiftCertificateRepository giftCertificateRepository;
     @Mock
-    private static TagRepository tagRepository;
+    private TagRepository tagRepository;
 
     @InjectMocks
     private GiftServiceImpl giftService;
@@ -48,15 +50,12 @@ class GiftServiceImplTest {
         currentTimestamp = new Timestamp(System.currentTimeMillis());
         giftCertificateEntityList = new ArrayList<>();
 
-        Set<TagEntity> tags = new HashSet<>();
-
-        LongStream.range(1, 5)
-                .forEach(index -> {
-                    tags.add(TagEntity.builder()
-                            .id(index)
-                            .name("name" + index)
-                            .build());
-                });
+        Set<TagEntity> tags = LongStream.range(1, 6)
+                .mapToObj(index -> TagEntity.builder()
+                        .id(index)
+                        .name("name" + index)
+                        .build())
+        .collect(Collectors.toSet());
 
         LongStream.range(1, 6)
                 .forEach(index -> {
@@ -180,7 +179,6 @@ class GiftServiceImplTest {
 
     @Test
     void updateGift() {
-        Mockito.when(giftCertificateRepository.updateGift(Mockito.any(GiftCertificateEntity.class))).thenReturn(giftCertificateEntity);
         Mockito.when(giftCertificateRepository.findById(Mockito.any())).thenReturn(giftCertificateEntity);
 
         Set<TagDto> tags = new HashSet<>();
@@ -202,6 +200,8 @@ class GiftServiceImplTest {
     @Test
     void deleteGiftById() {
         Long id = 1L;
+
+        Mockito.when(giftCertificateRepository.findById(id)).thenReturn(giftCertificateEntity);
 
         giftService.deleteGiftById(id);
 

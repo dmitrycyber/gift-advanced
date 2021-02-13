@@ -1,48 +1,23 @@
-DROP TABLE IF EXISTS gift_certificate CASCADE;
-DROP TABLE IF EXISTS tag CASCADE;
-DROP TABLE IF EXISTS gift_tags CASCADE;
+INSERT INTO public.gift_certificates
+       (id, created_date, last_update_date, description, duration, name, price)
+VALUES (1, now(), now(), 'description1', 13, 'name1', 123),
+       (2, now(), now(), 'description2', 13, 'name2', 123),
+       (3, now(), now(), 'description3', 13, 'name3', 123),
+       (4, now(), now(), 'description4', 13, 'name4', 123),
+       (5, now(), now(), 'description5', 13, 'name5', 123);
 
-CREATE TABLE gift_certificate (
-                                  id BIGSERIAL PRIMARY KEY,
-                                  name varchar(255),
-                                  description varchar(255),
-                                  price integer,
-                                  duration integer,
-                                  create_date timestamp,
-                                  last_update_date timestamp
-);
+INSERT INTO public.tags
+       (id, created_date, last_update_date, name)
+VALUES (1, now(), now(), 'name1'),
+       (2, now(), now(), 'name2'),
+       (3, now(), now(), 'name3'),
+       (4, now(), now(), 'name4'),
+       (5, now(), now(), 'name5');
 
-CREATE TABLE tag (
-                     id BIGSERIAL PRIMARY KEY,
-                     name varchar(255)
-);
-
-CREATE TABLE gift_tags (
-                           gift_id bigint,
-                           tag_id bigint,
-                           PRIMARY KEY (gift_id, tag_id),
-                           FOREIGN KEY (gift_id) REFERENCES gift_certificate(id) ON UPDATE CASCADE ON DELETE CASCADE,
-                           FOREIGN KEY (tag_id) REFERENCES tag(id) ON UPDATE CASCADE ON DELETE CASCADE
-);
-
-
-insert into gift_certificate values
-(1, 'name1', 'description1', 10, 10, null, null),
-(2, 'name2', 'description2', 20, 20, null, null),
-(3, 'name3', 'description3', 30, 30, null, null),
-(4, 'name4', 'description4', 40, 40, null, null),
-(5, 'name5', 'description5', 50, 50, null, null);
-
-insert into tag values
-(1, 'name1'),
-(2, 'name2'),
-(3, 'name3'),
-(4, 'name4'),
-(5, 'name5');
-
-insert into gift_tags values
-(1, 1),
-(1, 2),
-(2, 3),
-(2, 4),
-(2, 5);
+INSERT INTO public.gift_tags
+       (gift_id, tag_id)
+VALUES (1, 1),
+       (1, 2),
+       (2, 3),
+       (2, 4),
+       (2, 5);

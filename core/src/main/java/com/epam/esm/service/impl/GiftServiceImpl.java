@@ -28,7 +28,7 @@ public class GiftServiceImpl implements GiftService {
     private final TagRepository tagRepository;
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<GiftCertificateDto> getAllGifts(Integer pageNumber, Integer pageSize) {
         List<GiftCertificateEntity> giftCertificateEntityList = giftCertificateRepository.findAll(pageNumber, pageSize);
         return giftCertificateEntityList.stream()
@@ -37,7 +37,7 @@ public class GiftServiceImpl implements GiftService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<GiftCertificateDto> searchGifts(GiftSearchDto customSearchRequest, Integer pageNumber, Integer pageSize) {
         List<GiftCertificateEntity> giftList = giftCertificateRepository.findAndSortGifts(customSearchRequest, pageNumber, pageSize);
         return giftList.stream()
@@ -46,7 +46,7 @@ public class GiftServiceImpl implements GiftService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public GiftCertificateDto getGiftById(Long giftId) {
         GiftCertificateEntity giftById = giftCertificateRepository.findById(giftId);
 
@@ -71,7 +71,7 @@ public class GiftServiceImpl implements GiftService {
     public GiftCertificateDto updateGift(GiftCertificateDto giftCertificateDto) {
         GiftCertificateEntity giftEntityToSave = giftCertificateRepository.findById(giftCertificateDto.getId());
 
-        checkIfGiftNotFount(giftEntityToSave);
+        checkIfGiftNotFound(giftEntityToSave);
 
         if (giftCertificateDto.getName() != null) {
             giftEntityToSave.setName(giftCertificateDto.getName());
@@ -91,11 +91,9 @@ public class GiftServiceImpl implements GiftService {
                 .collect(Collectors.toSet());
 
         Set<TagEntity> savedTags = createTagsIfNeeded(tagsToSave, giftEntityToSave);
+        giftEntityToSave.setTagEntities(savedTags);
 
-        GiftCertificateEntity savedGiftEntity = giftCertificateRepository.updateGift(giftEntityToSave);
-        savedGiftEntity.setTagEntities(savedTags);
-
-        return EntityConverter.convertGiftEntityToDto(savedGiftEntity);
+        return EntityConverter.convertGiftEntityToDto(giftEntityToSave);
     }
 
     @Override
@@ -105,9 +103,11 @@ public class GiftServiceImpl implements GiftService {
 
         Set<OrderEntity> orderEntities = giftCertificateEntity.getOrderEntities();
 
-        orderEntities.forEach(orderEntity -> {
-            orderEntity.setGiftCertificateEntity(null);
-        });
+        if (orderEntities != null){
+            orderEntities.forEach(orderEntity -> {
+                orderEntity.setGiftCertificateEntity(null);
+            });
+        }
 
         giftCertificateRepository.deleteGift(giftId);
     }
@@ -127,7 +127,7 @@ public class GiftServiceImpl implements GiftService {
         return savedTags;
     }
 
-    private void checkIfGiftNotFount(GiftCertificateEntity giftById) {
+    private void checkIfGiftNotFound(GiftCertificateEntity giftById) {
         if (giftById == null) {
             throw new GiftNotFoundException();
         }

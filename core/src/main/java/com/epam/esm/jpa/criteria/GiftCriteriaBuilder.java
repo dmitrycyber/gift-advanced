@@ -41,7 +41,8 @@ public class GiftCriteriaBuilder {
         if (tagNamePrefixes != null) {
             for (String tagNamePrefix : tagNamePrefixes) {
                 Join<GiftCertificateEntity, TagEntity> tagJoin = giftCertificateRoot.join(DaoConstants.GIFT_FIELD_TAG_ENTITIES);
-                Predicate predicate = criteriaBuilder.equal(tagJoin.get(DaoConstants.GIFT_FIELD_NAME), tagNamePrefix);
+                Predicate predicate = criteriaBuilder.like(tagJoin.get(DaoConstants.GIFT_FIELD_NAME),
+                        ZERO_OR_MORE_ELEMENTS_WILDCARD + tagNamePrefix + ZERO_OR_MORE_ELEMENTS_WILDCARD);
                 predicateList.add(predicate);
             }
         }

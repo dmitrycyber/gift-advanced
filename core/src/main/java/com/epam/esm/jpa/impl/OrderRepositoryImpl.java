@@ -32,7 +32,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public List<OrderEntity> findByUserId(Long userId, Integer pageNumber, Integer pageSize) {
-        TypedQuery<OrderEntity> query = entityManager.createQuery("select oe from OrderEntity oe WHERE oe.userEntity.id = :userId", OrderEntity.class)
+        TypedQuery<OrderEntity> query = entityManager.createQuery("from OrderEntity oe WHERE oe.userEntity.id = :userId", OrderEntity.class)
                 .setParameter("userId", userId);
 
         PaginationBuilder.addPagination(pageNumber, pageSize, query);

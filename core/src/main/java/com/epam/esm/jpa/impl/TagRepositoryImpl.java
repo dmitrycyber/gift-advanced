@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.GetMapping;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -25,19 +26,19 @@ public class TagRepositoryImpl implements TagRepository {
     private final TagCriteriaBuilder tagCriteriaBuilder;
 
     private static final String SELECT_MOST_WIDELY_USED_USER_TAG =
-            "SELECT t.id, t.created_date, t.last_update_date, t.name FROM orders o " +
-                    "JOIN gift_certificates gc on o.gift_id = gc.id " +
-                    "JOIN gift_tags gt on gc.id = gt.gift_id " +
-                    "JOIN tags t on gt.tag_id = t.id " +
-                    "WHERE o.user_id = " +
-                    "   (SELECT user_id  " +
-                    "    FROM orders o\n" +
-                    "    GROUP BY user_id " +
-                    "    ORDER BY sum(o.cost) desc " +
-                    "    LIMIT 1) " +
-                    "GROUP BY t.id, t.created_date, t.last_update_date, t.name " +
-                    "ORDER BY t.id DESC " +
-                    "LIMIT 1";
+                "SELECT t.id, t.created_date, t.last_update_date, t.name FROM orders o " +
+                "JOIN gift_certificates gc on o.gift_id = gc.id " +
+                "JOIN gift_tags gt on gc.id = gt.gift_id " +
+                "JOIN tags t on gt.tag_id = t.id " +
+                "WHERE o.user_id = " +
+                "   (SELECT user_id  " +
+                "    FROM orders o\n" +
+                "    GROUP BY user_id " +
+                "    ORDER BY sum(o.cost) desc " +
+                "    LIMIT 1) " +
+                "GROUP BY t.id, t.created_date, t.last_update_date, t.name " +
+                "ORDER BY t.id DESC " +
+                "LIMIT 1";
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -45,7 +46,7 @@ public class TagRepositoryImpl implements TagRepository {
     @Override
     @GetMapping
     public List<TagEntity> findAllTags(Integer pageNumber, Integer pageSize) {
-        TypedQuery<TagEntity> query = entityManager.createQuery("select tagEntity from TagEntity tagEntity", TagEntity.class);
+        TypedQuery<TagEntity> query = entityManager.createQuery("from TagEntity tagEntity", TagEntity.class);
         PaginationBuilder.addPagination(pageNumber, pageSize, query);
         return query.getResultList();
     }
@@ -72,7 +73,7 @@ public class TagRepositoryImpl implements TagRepository {
 
     @Override
     public Optional<TagEntity> findTagByName(String tagName) {
-        return (Optional<TagEntity>) entityManager.createQuery("select tagEntity from TagEntity tagEntity where name=:tagName")
+        return (Optional<TagEntity>) entityManager.createQuery("from TagEntity tagEntity where name=:tagName")
                 .setParameter("tagName", tagName)
                 .getResultStream()
                 .findFirst();

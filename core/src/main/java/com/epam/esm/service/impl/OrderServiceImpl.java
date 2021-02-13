@@ -22,6 +22,7 @@ public class OrderServiceImpl implements OrderService {
     private final GiftCertificateRepository giftCertificateRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<OrderDto> findAll(Integer pageNumber, Integer pageSize) {
         List<OrderEntity> orderEntityList = orderRepository.findAll(pageNumber, pageSize);
         return orderEntityList.stream()
@@ -30,6 +31,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<OrderDto> findByUserId(Long userId, Integer pageNumber, Integer pageSize) {
         List<OrderEntity> orderEntityList = orderRepository.findByUserId(userId, pageNumber, pageSize);
         return orderEntityList.stream()
@@ -38,6 +40,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public OrderDto findById(Long orderId) {
         OrderEntity orderEntity = orderRepository.findById(orderId);
 

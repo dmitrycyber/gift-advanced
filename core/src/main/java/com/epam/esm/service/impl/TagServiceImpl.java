@@ -24,7 +24,7 @@ public class TagServiceImpl implements TagService {
     private final UserRepository userRepository;
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<TagDto> getAllTags(Integer pageNumber, Integer pageSize) {
         List<TagEntity> allTags = tagRepository.findAllTags(pageNumber, pageSize);
 
@@ -34,7 +34,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<TagDto> getTagByPartName(TagSearchDto tagSearchDto, Integer pageNumber, Integer pageSize){
         List<TagEntity> tagByName = tagRepository.findAllTags(tagSearchDto, pageNumber, pageSize);
 
@@ -44,14 +44,14 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public TagDto getTagById(Long tagId) {
         TagEntity tagById = tagRepository.findTagById(tagId);
         return EntityConverter.convertTagEntityToDto(tagById);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public TagDto getTagByName(String tagName) {
         Optional<TagEntity> tagByName = tagRepository.findTagByName(tagName);
 
@@ -72,12 +72,13 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public void deleteTagById(Long tagId){
         tagRepository.deleteTagById(tagId);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public TagDto findMostWidelyUsedUserTag() {
         TagEntity mostWidelyUsedUserTag = tagRepository.findMostWidelyUsedUserTag();
         return EntityConverter.convertTagEntityToDto(mostWidelyUsedUserTag);
