@@ -14,7 +14,6 @@ public interface GiftCertificateRepository {
      */
     List<GiftCertificateEntity> findAll(Integer pageNumber, Integer pageSize);
 
-
     /**
      * Find gift certificate by criteria
      * @param giftSearchDto search criteria
@@ -24,12 +23,11 @@ public interface GiftCertificateRepository {
      */
     List<GiftCertificateEntity> findAndSortGifts(GiftSearchDto giftSearchDto, Integer pageNumber, Integer pageSize);
 
-
     /**
      * Find gift certificate by gift id
      * @param id gift id
      * @return GiftCertificateEntity
-     * @throws com.epam.esm.jpa.exception.GiftNotFoundException if fount no gifts
+     * @throws com.epam.esm.jpa.exception.GiftNotFoundException if found no gifts
      */
     GiftCertificateEntity findById(Long id);
 
@@ -44,15 +42,14 @@ public interface GiftCertificateRepository {
      * Update gift
      * @param giftCertificateEntity entity to update
      * @return updated gift
-     * @throws com.epam.esm.jpa.exception.GiftNotFoundException if fount no gifts
+     * @throws com.epam.esm.jpa.exception.GiftNotFoundException if found no gifts
      */
     GiftCertificateEntity updateGift(GiftCertificateEntity giftCertificateEntity);
 
     /**
      * Delete gift by id
      * @param id gift id
-     * @throws com.epam.esm.jpa.exception.GiftNotFoundException if fount no gifts
+     * @throws com.epam.esm.jpa.exception.GiftNotFoundException if found no gifts
      */
     void deleteGift(Long id);
-
 }

@@ -6,6 +6,7 @@ import com.epam.esm.jpa.exception.GiftNotFoundException;
 import com.epam.esm.model.dto.search.GiftSearchDto;
 import com.epam.esm.model.dto.GiftCertificateDto;
 import com.epam.esm.model.entity.GiftCertificateEntity;
+import com.epam.esm.model.entity.OrderEntity;
 import com.epam.esm.model.entity.TagEntity;
 import com.epam.esm.service.GiftService;
 import com.epam.esm.util.EntityConverter;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -47,8 +49,6 @@ public class GiftServiceImpl implements GiftService {
     @Transactional
     public GiftCertificateDto getGiftById(Long giftId) {
         GiftCertificateEntity giftById = giftCertificateRepository.findById(giftId);
-
-        checkIfGiftNotFount(giftById);
 
         return EntityConverter.convertGiftEntityToDto(giftById);
     }
@@ -101,21 +101,29 @@ public class GiftServiceImpl implements GiftService {
     @Override
     @Transactional
     public void deleteGiftById(Long giftId) {
+        GiftCertificateEntity giftCertificateEntity = giftCertificateRepository.findById(giftId);
+
+        Set<OrderEntity> orderEntities = giftCertificateEntity.getOrderEntities();
+
+        orderEntities.forEach(orderEntity -> {
+            orderEntity.setGiftCertificateEntity(null);
+        });
+
         giftCertificateRepository.deleteGift(giftId);
     }
 
     private Set<TagEntity> createTagsIfNeeded(Set<TagEntity> tagEntities, GiftCertificateEntity giftCertificateEntity) {
         Set<TagEntity> savedTags = new HashSet<>();
-
-        for (TagEntity tagEntity : tagEntities) {
-            TagEntity tagEntityByName = tagRepository.findTagByName(tagEntity.getName());
-            if (tagEntityByName == null) {
-                tagRepository.createTag(tagEntity);
-                savedTags.add(tagEntity);
-            } else {
-                savedTags.add(tagEntityByName);
-            }
-        }
+        tagEntities
+                .forEach(tagEntity -> {
+                    Optional<TagEntity> tagByName = tagRepository.findTagByName(tagEntity.getName());
+                    if (tagByName.isEmpty()) {
+                        tagRepository.createTag(tagEntity);
+                        savedTags.add(tagEntity);
+                    } else {
+                        savedTags.add(tagByName.get());
+                    }
+                });
         return savedTags;
     }
 

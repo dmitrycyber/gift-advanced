@@ -14,12 +14,17 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.hateoas.client.LinkDiscoverer;
+import org.springframework.hateoas.client.LinkDiscoverers;
+import org.springframework.hateoas.mediatype.collectionjson.CollectionJsonLinkDiscoverer;
+import org.springframework.plugin.core.SimplePluginRegistry;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.validation.beanvalidation.MessageSourceResourceBundleLocator;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import javax.annotation.PostConstruct;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 @Configuration
@@ -33,15 +38,16 @@ public class SpringConfig implements WebMvcConfigurer {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        return objectMapper;
-    }
-
-    @PostConstruct
-    public ObjectMapper jacksonObjectMapper() {
-        ObjectMapper objectMapper = objectMapper();
         objectMapper.registerModule(new JsonNullableModule());
         return objectMapper;
     }
+
+//    @PostConstruct
+//    public ObjectMapper jacksonObjectMapper() {
+//        ObjectMapper objectMapper = objectMapper();
+//        objectMapper.registerModule(new JsonNullableModule());
+//        return objectMapper;
+//    }
 
     @Bean
     public MessageSource messageSource(@Value("${message-source.basename}") String messageSourceBaseName) {
@@ -83,5 +89,12 @@ public class SpringConfig implements WebMvcConfigurer {
     @Bean
     public TagCriteriaBuilder tagCriteriaBuilder() {
         return new TagCriteriaBuilder();
+    }
+
+    @Bean
+    public LinkDiscoverers discoverers() {
+        List<LinkDiscoverer> plugins = new ArrayList<>();
+        plugins.add(new CollectionJsonLinkDiscoverer());
+        return new LinkDiscoverers(SimplePluginRegistry.create(plugins));
     }
 }

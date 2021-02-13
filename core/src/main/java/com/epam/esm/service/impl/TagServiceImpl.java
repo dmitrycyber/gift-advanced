@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,7 +36,7 @@ public class TagServiceImpl implements TagService {
     @Override
     @Transactional
     public List<TagDto> getTagByPartName(TagSearchDto tagSearchDto, Integer pageNumber, Integer pageSize){
-        List<TagEntity> tagByName = tagRepository.findTagByPartName(tagSearchDto, pageNumber, pageSize);
+        List<TagEntity> tagByName = tagRepository.findAllTags(tagSearchDto, pageNumber, pageSize);
 
         return tagByName.stream()
                 .map(EntityConverter::convertTagEntityToDto)
@@ -52,23 +53,20 @@ public class TagServiceImpl implements TagService {
     @Override
     @Transactional
     public TagDto getTagByName(String tagName) {
-        TagEntity tagByName = tagRepository.findTagByName(tagName);
+        Optional<TagEntity> tagByName = tagRepository.findTagByName(tagName);
 
-        return EntityConverter.convertTagEntityToDto(tagByName);
+        return EntityConverter.convertTagEntityToDto(tagByName.orElse(null));
     }
-
-
 
     @Override
     @Transactional
     public TagDto createTag(TagDto tagDto){
-        TagEntity tagEntity = EntityConverter.convertTagDtoToEntity(tagDto);
+        Optional<TagEntity> tagByName = tagRepository.findTagByName(tagDto.getName());
 
-        TagEntity tagByName = tagRepository.findTagByName(tagEntity.getName());
-
-        if (tagByName != null) {
+        if (tagByName.isEmpty()) {
             throw new TagNameRegisteredException();
         }
+        TagEntity tagEntity = EntityConverter.convertTagDtoToEntity(tagDto);
         TagEntity tag = tagRepository.createTag(tagEntity);
         return EntityConverter.convertTagEntityToDto(tag);
     }
@@ -81,9 +79,7 @@ public class TagServiceImpl implements TagService {
     @Override
     @Transactional
     public TagDto findMostWidelyUsedUserTag() {
-        Long userId = userRepository.findUserIdWithMaxSumOrders();
-        TagEntity mostWidelyUsedUserTag = tagRepository.findMostWidelyUsedUserTag(userId);
-
+        TagEntity mostWidelyUsedUserTag = tagRepository.findMostWidelyUsedUserTag();
         return EntityConverter.convertTagEntityToDto(mostWidelyUsedUserTag);
     }
 }

@@ -13,6 +13,8 @@ import javax.persistence.criteria.Order;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.epam.esm.jpa.criteria.DaoConstants.ZERO_OR_MORE_ELEMENTS_WILDCARD;
+
 public class GiftCriteriaBuilder {
     public CriteriaQuery<GiftCertificateEntity> build(CriteriaBuilder criteriaBuilder, GiftSearchDto giftCertificateQueryParameter) {
 
@@ -23,23 +25,23 @@ public class GiftCriteriaBuilder {
 
         String giftNamePrefix = giftCertificateQueryParameter.getNamePrefix();
         if (giftNamePrefix != null) {
-            Predicate predicate = criteriaBuilder.like(giftCertificateRoot.get(DaoConstants.FIELD_NAME),
-                    DaoConstants.ZERO_OR_MORE_ELEMENTS_WILDCARD + giftNamePrefix + DaoConstants.ZERO_OR_MORE_ELEMENTS_WILDCARD);
+            Predicate predicate = criteriaBuilder.like(giftCertificateRoot.get(DaoConstants.GIFT_FIELD_NAME),
+                    ZERO_OR_MORE_ELEMENTS_WILDCARD + giftNamePrefix + ZERO_OR_MORE_ELEMENTS_WILDCARD);
             predicateList.add(predicate);
         }
 
         String giftDescriptionPrefix = giftCertificateQueryParameter.getDescriptionPrefix();
         if (giftDescriptionPrefix != null) {
-            Predicate predicate = criteriaBuilder.like(giftCertificateRoot.get(DaoConstants.FIELD_DESCRIPTION),
-                    DaoConstants.ZERO_OR_MORE_ELEMENTS_WILDCARD + giftDescriptionPrefix + DaoConstants.ZERO_OR_MORE_ELEMENTS_WILDCARD);
+            Predicate predicate = criteriaBuilder.like(giftCertificateRoot.get(DaoConstants.GIFT_FIELD_DESCRIPTION),
+                    ZERO_OR_MORE_ELEMENTS_WILDCARD + giftDescriptionPrefix + ZERO_OR_MORE_ELEMENTS_WILDCARD);
             predicateList.add(predicate);
         }
 
         List<String> tagNamePrefixes = giftCertificateQueryParameter.getTagNamePrefixes();
         if (tagNamePrefixes != null) {
             for (String tagNamePrefix : tagNamePrefixes) {
-                Join<GiftCertificateEntity, TagEntity> tagJoin = giftCertificateRoot.join(DaoConstants.FIELD_TAG_ENTITIES);
-                Predicate predicate = criteriaBuilder.equal(tagJoin.get(DaoConstants.FIELD_NAME), tagNamePrefix);
+                Join<GiftCertificateEntity, TagEntity> tagJoin = giftCertificateRoot.join(DaoConstants.GIFT_FIELD_TAG_ENTITIES);
+                Predicate predicate = criteriaBuilder.equal(tagJoin.get(DaoConstants.GIFT_FIELD_NAME), tagNamePrefix);
                 predicateList.add(predicate);
             }
         }
@@ -54,7 +56,7 @@ public class GiftCriteriaBuilder {
 
         if (sortField != null && sortMethod != null) {
             if (sortField.equals(SearchConstants.NAME_FIELD)) {
-                columnNameToSort = DaoConstants.FIELD_NAME;
+                columnNameToSort = DaoConstants.GIFT_FIELD_NAME;
                 if (sortMethod.equals(SearchConstants.ASC_METHOD_SORT)) {
                     order = criteriaBuilder.asc(giftCertificateRoot.get(columnNameToSort));
                 }
@@ -63,7 +65,7 @@ public class GiftCriteriaBuilder {
                 }
             }
             if (sortField.equals(SearchConstants.DATE_FIELD)) {
-                columnNameToSort = DaoConstants.FIELD_CREATE_DATE;
+                columnNameToSort = DaoConstants.GIFT_FIELD_CREATE_DATE;
                 if (sortMethod.equals(SearchConstants.ASC_METHOD_SORT)) {
                     order = criteriaBuilder.asc(giftCertificateRoot.get(columnNameToSort));
                 }

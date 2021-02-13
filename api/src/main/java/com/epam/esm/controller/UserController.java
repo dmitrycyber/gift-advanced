@@ -12,7 +12,7 @@ public interface UserController {
     UserDto register(UserDto userDto);
 
     @ApiOperation(value = "Api v1. Get user by id")
-    UserDto userProfile(Long userId);
+    UserDto getUser(Long userId);
 
     @ApiOperation(value = "Api v1. Get all users")
     List<UserDto> allUsers(

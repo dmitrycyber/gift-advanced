@@ -45,7 +45,12 @@ public class GiftCertificateEntity extends BaseEntity {
     )
     private Set<TagEntity> tagEntities;
 
-    @OneToMany(mappedBy = "giftCertificateEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "giftCertificateEntity", cascade = {
+            CascadeType.DETACH,
+            CascadeType.MERGE,
+            CascadeType.PERSIST,
+            CascadeType.REFRESH
+    }, fetch = FetchType.LAZY)
     private Set<OrderEntity> orderEntities;
 
     @Builder

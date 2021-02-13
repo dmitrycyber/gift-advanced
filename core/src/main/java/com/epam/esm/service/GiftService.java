@@ -28,7 +28,7 @@ public interface GiftService {
      * Find gift certificate by gift id
      * @param giftId gift id
      * @return GiftCertificateDto
-     * @throws com.epam.esm.jpa.exception.GiftNotFoundException from repository layer if fount no gifts
+     * @throws com.epam.esm.jpa.exception.GiftNotFoundException from repository layer if found no gifts
      */
     GiftCertificateDto getGiftById(Long giftId);
 
@@ -44,14 +44,14 @@ public interface GiftService {
      * @param giftCertificateDto dto to update
      * method support partial update
      * @return updated gift
-     * @throws com.epam.esm.jpa.exception.GiftNotFoundException from repository layer if fount no gifts
+     * @throws com.epam.esm.jpa.exception.GiftNotFoundException from repository layer if found no gifts
      */
     GiftCertificateDto updateGift(GiftCertificateDto giftCertificateDto);
 
     /**
      * Delete gift by id
      * @param giftId gift id
-     * @throws com.epam.esm.jpa.exception.GiftNotFoundException if fount no gifts
+     * @throws com.epam.esm.jpa.exception.GiftNotFoundException if found no gifts
      */
     void deleteGiftById(Long giftId);
 }

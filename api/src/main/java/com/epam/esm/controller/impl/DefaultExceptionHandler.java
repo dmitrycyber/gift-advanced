@@ -21,6 +21,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -89,17 +92,19 @@ public class DefaultExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<List<ErrorResponse>> validationErrorHandler(MethodArgumentNotValidException e) {
-        List<ErrorResponse> errors = e.getBindingResult()
+    public ResponseEntity<ErrorResponse> validationErrorHandler(MethodArgumentNotValidException e) {
+        List<String> errorList = e.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(fieldError -> ErrorResponse.builder()
-                        .code(Status.VALIDATION_EXCEPTION.getCode())
-                        .comment(fieldError.getField() + ": " + fieldError.getDefaultMessage())
-                        .build())
+                .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
                 .collect(Collectors.toList());
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .code(Status.VALIDATION_EXCEPTION.getCode())
+                .comment(errorList)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
     private ResponseEntity<ErrorResponse> getErrorResponseResponseEntity(HttpServletRequest request, Exception ex, WebRequest webRequest, Status status, HttpStatus httpStatus, String message) {
@@ -107,7 +112,7 @@ public class DefaultExceptionHandler {
 
         ErrorResponse body = ErrorResponse.builder()
                 .code(status.getCode())
-                .comment(message)
+                .comment(Collections.singletonList(message))
                 .build();
 
         return ResponseEntity.status(httpStatus).body(body);

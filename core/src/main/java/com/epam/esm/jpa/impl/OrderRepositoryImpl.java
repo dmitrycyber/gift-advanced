@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public List<OrderEntity> findAll(Integer pageNumber, Integer pageSize) {
-        TypedQuery<OrderEntity> query = entityManager.createQuery("select orderEntity from OrderEntity orderEntity", OrderEntity.class);
+        TypedQuery<OrderEntity> query = entityManager.createQuery("from OrderEntity orderEntity", OrderEntity.class);
 
         PaginationBuilder.addPagination(pageNumber, pageSize, query);
 

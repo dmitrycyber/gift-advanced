@@ -31,18 +31,18 @@ import java.util.Set;
 @Slf4j
 public class GiftControllerImpl implements GiftController {
     private final GiftService giftService;
-    private final GiftSearchDto defaultCustomSearchRequest = GiftSearchDto.builder()
+    private static final GiftSearchDto defaultCustomSearchRequest = GiftSearchDto.builder()
             .build();
 
     @Override
     @GetMapping
     public ResponseEntity<List<GiftCertificateDto>> allGifts(@Valid GiftSearchDto giftSearchDto, Integer pageNumber, Integer pageSize) {
 
-        List<GiftCertificateDto> allGifts = !giftSearchDto.equals(defaultCustomSearchRequest)
+        List<GiftCertificateDto> allGifts = !defaultCustomSearchRequest.equals(giftSearchDto)
                 ? giftService.searchGifts(giftSearchDto, pageNumber, pageSize)
                 : giftService.getAllGifts(pageNumber, pageSize);
 
-        addSelfLinksToList(allGifts);
+        allGifts.forEach(this::addSelfLinks);
         return ResponseEntity.ok(allGifts);
     }
 
@@ -89,21 +89,15 @@ public class GiftControllerImpl implements GiftController {
         giftService.deleteGiftById(id);
     }
 
-    private void addSelfLinksToList(List<GiftCertificateDto> giftCertificateDtoList) {
-        for (GiftCertificateDto giftCertificateDto : giftCertificateDtoList) {
-            addSelfLinks(giftCertificateDto);
-        }
-    }
-
     private void addSelfLinks(GiftCertificateDto giftCertificateDto) {
-        @Valid Set<TagDto> tags = giftCertificateDto.getTags();
-        for (TagDto tagDto : tags) {
-            tagDto.add(WebMvcLinkBuilder
-                    .linkTo(WebMvcLinkBuilder
-                            .methodOn(TagControllerImpl.class)
-                            .tagById(tagDto.getId()))
-                    .withSelfRel());
-        }
+        giftCertificateDto.getTags()
+                .forEach(tagDto -> {
+                    tagDto.add(WebMvcLinkBuilder
+                            .linkTo(WebMvcLinkBuilder
+                                    .methodOn(TagControllerImpl.class)
+                                    .tagById(tagDto.getId()))
+                            .withSelfRel());
+                });
         giftCertificateDto.add(WebMvcLinkBuilder
                 .linkTo(WebMvcLinkBuilder
                         .methodOn(GiftControllerImpl.class)

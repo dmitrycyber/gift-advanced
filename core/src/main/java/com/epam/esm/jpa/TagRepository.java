@@ -3,6 +3,7 @@ package com.epam.esm.jpa;
 import com.epam.esm.model.dto.search.TagSearchDto;
 import com.epam.esm.model.entity.TagEntity;
 import java.util.List;
+import java.util.Optional;
 
 public interface TagRepository {
     /**
@@ -18,7 +19,7 @@ public interface TagRepository {
      * Find tags by tag id
      * @param tagId tag id
      * @return TagEntity
-     * @throws com.epam.esm.jpa.exception.TagNotFoundException if fount no tags
+     * @throws com.epam.esm.jpa.exception.TagNotFoundException if found no tags
      */
     TagEntity findTagById(Long tagId);
 
@@ -27,7 +28,7 @@ public interface TagRepository {
      * @param tagName tag name
      * @return List TagEntity which matches the search conditions
      */
-    TagEntity findTagByName(String tagName);
+    Optional<TagEntity> findTagByName(String tagName);
 
     /**
      * Find tags by full part tag name
@@ -36,7 +37,7 @@ public interface TagRepository {
      * @param pageSize pagination
      * @return List TagEntity which matches the search conditions
      */
-    List<TagEntity> findTagByPartName(TagSearchDto tagSearchDto, Integer pageNumber, Integer pageSize);
+    List<TagEntity> findAllTags(TagSearchDto tagSearchDto, Integer pageNumber, Integer pageSize);
 
     /**
      * Create tag
@@ -48,14 +49,13 @@ public interface TagRepository {
     /**
      * Delete tag by id
      * @param tagId tag id
-     * @throws com.epam.esm.jpa.exception.TagNotFoundException if fount no tags
+     * @throws com.epam.esm.jpa.exception.TagNotFoundException if found no tags
      */
     void deleteTagById(Long tagId);
 
     /**
-     * Find most widely used user tag
+     * Find most widely used user`s tag with highest cost of all orders
      * @return most widely user tag with the highest cost
-     * @param userId user id
      */
-    TagEntity findMostWidelyUsedUserTag(Long userId);
+    TagEntity findMostWidelyUsedUserTag();
 }

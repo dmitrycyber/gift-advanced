@@ -31,7 +31,7 @@ public class OrderControllerImpl implements OrderController {
     @ResponseStatus(HttpStatus.OK)
     public List<OrderDto> userOrders(@PathVariable Long userId, Integer pageNumber, Integer pageSize) {
         List<OrderDto> orderDtoList = orderService.findByUserId(userId, pageNumber, pageSize);
-        addSelfLinksToList(orderDtoList);
+        orderDtoList.forEach(this::addSelfLinks);
         return orderDtoList;
     }
 
@@ -40,7 +40,7 @@ public class OrderControllerImpl implements OrderController {
     @ResponseStatus(HttpStatus.OK)
     public List<OrderDto> allOrders(Integer pageNumber, Integer pageSize) {
         List<OrderDto> orderDtoList = orderService.findAll(pageNumber, pageSize);
-        addSelfLinksToList(orderDtoList);
+        orderDtoList.forEach(this::addSelfLinks);
         return orderDtoList;
     }
 
@@ -60,12 +60,6 @@ public class OrderControllerImpl implements OrderController {
         OrderDto savedOrder = orderService.createOrder(orderDto);
         addSelfLinks(savedOrder);
         return savedOrder;
-    }
-
-    private void addSelfLinksToList(List<OrderDto> orderDtos) {
-        for (OrderDto orderDto : orderDtos) {
-            addSelfLinks(orderDto);
-        }
     }
 
     private void addSelfLinks(OrderDto orderDto) {

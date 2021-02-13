@@ -26,19 +26,16 @@ import java.util.List;
 @Slf4j
 public class TagControllerImpl implements TagController {
     private final TagService tagService;
-    private final TagSearchDto defaultTagSearchDto = TagSearchDto.builder()
+    private static final TagSearchDto defaultTagSearchDto = TagSearchDto.builder()
             .build();
 
     @Override
     @GetMapping
     public ResponseEntity<List<TagDto>> allTags(@Valid TagSearchDto tagSearchDto, Integer pageNumber, Integer pageSize) {
-        log.info("REQUEST SEARCH TAGS " + tagSearchDto);
-
-        List<TagDto> tags = !tagSearchDto.equals(defaultTagSearchDto)
+        List<TagDto> tags = !defaultTagSearchDto.equals(tagSearchDto)
                 ? tagService.getTagByPartName(tagSearchDto, pageNumber, pageSize)
                 : tagService.getAllTags(pageNumber, pageSize);
-        addSelfLinksToList(tags);
-
+        tags.forEach(this::addSelfLinks);
         return ResponseEntity.ok(tags);
     }
 
@@ -67,20 +64,13 @@ public class TagControllerImpl implements TagController {
         tagService.deleteTagById(id);
     }
 
-
     @Override
-    @GetMapping("/user")
+    @GetMapping("/widely-used/user")
     @ResponseStatus(HttpStatus.OK)
     public TagDto findMostWidelyUsedUserTag() {
         TagDto tagDto = tagService.findMostWidelyUsedUserTag();
         addSelfLinks(tagDto);
         return tagDto;
-    }
-
-    private void addSelfLinksToList(List<TagDto> tagDtos) {
-        for (TagDto tagDto : tagDtos) {
-            addSelfLinks(tagDto);
-        }
     }
 
     private void addSelfLinks(TagDto tagDto) {

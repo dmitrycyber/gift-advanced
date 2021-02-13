@@ -38,9 +38,9 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UserDto userProfile(@PathVariable Long id) {
+    public UserDto getUser(@PathVariable Long id) {
         UserDto userDto = userService.userProfile(id);
         addSelfLinks(userDto);
         return userDto;
@@ -51,29 +51,23 @@ public class UserControllerImpl implements UserController {
     @ResponseStatus(HttpStatus.OK)
     public List<UserDto> allUsers(Integer pageNumber, Integer pageSize) {
         List<UserDto> userDtoList = userService.findAll(pageNumber, pageSize);
-        addSelfLinksToList(userDtoList);
+        userDtoList.forEach(this::addSelfLinks);
         return userDtoList;
     }
 
-    private void addSelfLinksToList(List<UserDto> userDtos) {
-        for (UserDto userDto : userDtos) {
-            addSelfLinks(userDto);
-        }
-    }
-
     private void addSelfLinks(UserDto userDto) {
-        @Valid Set<OrderDto> orders = userDto.getOrders();
-        for (OrderDto orderDto : orders) {
-            orderDto.add(WebMvcLinkBuilder
-                    .linkTo(WebMvcLinkBuilder
-                            .methodOn(OrderControllerImpl.class)
-                            .orderById(orderDto.getId()))
-                    .withSelfRel());
-        }
+        userDto.getOrders()
+                .forEach(orderDto -> {
+                    orderDto.add(WebMvcLinkBuilder
+                            .linkTo(WebMvcLinkBuilder
+                                    .methodOn(OrderControllerImpl.class)
+                                    .orderById(orderDto.getId()))
+                            .withSelfRel());
+                });
         userDto.add(WebMvcLinkBuilder
                 .linkTo(WebMvcLinkBuilder
                         .methodOn(UserControllerImpl.class)
-                        .userProfile(userDto.getId()))
+                        .getUser(userDto.getId()))
                 .withSelfRel());
     }
 }

@@ -28,6 +28,9 @@ public interface UserRepository {
      */
     List<UserEntity> findAll(Integer pageNumber, Integer pageSize);
 
-
+    /**
+     * Find user with max sum orders
+     * @return user id
+     */
     Long findUserIdWithMaxSumOrders();
 }

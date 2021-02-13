@@ -19,7 +19,7 @@ public interface TagService {
      * Find tags by tag id
      * @param tagId tag id
      * @return TagDto
-     * @throws com.epam.esm.jpa.exception.TagNotFoundException from repository layer if fount no tags
+     * @throws com.epam.esm.jpa.exception.TagNotFoundException from repository layer if found no tags
      */
     TagDto getTagById(Long tagId);
 
@@ -49,7 +49,7 @@ public interface TagService {
     /**
      * Delete tag by id
      * @param tagId tag id
-     * @throws com.epam.esm.jpa.exception.TagNotFoundException from repository layer if fount no tags
+     * @throws com.epam.esm.jpa.exception.TagNotFoundException from repository layer if found no tags
      */
     void deleteTagById(Long tagId);
 

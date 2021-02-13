@@ -24,6 +24,21 @@ import java.util.Optional;
 public class TagRepositoryImpl implements TagRepository {
     private final TagCriteriaBuilder tagCriteriaBuilder;
 
+    private static final String SELECT_MOST_WIDELY_USED_USER_TAG =
+            "SELECT t.id, t.created_date, t.last_update_date, t.name FROM orders o " +
+                    "JOIN gift_certificates gc on o.gift_id = gc.id " +
+                    "JOIN gift_tags gt on gc.id = gt.gift_id " +
+                    "JOIN tags t on gt.tag_id = t.id " +
+                    "WHERE o.user_id = " +
+                    "   (SELECT user_id  " +
+                    "    FROM orders o\n" +
+                    "    GROUP BY user_id " +
+                    "    ORDER BY sum(o.cost) desc " +
+                    "    LIMIT 1) " +
+                    "GROUP BY t.id, t.created_date, t.last_update_date, t.name " +
+                    "ORDER BY t.id DESC " +
+                    "LIMIT 1";
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -36,9 +51,9 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     @Override
-    public List<TagEntity> findTagByPartName(TagSearchDto tagSearchDto, Integer pageNumber, Integer pageSize) {
+    public List<TagEntity> findAllTags(TagSearchDto tagSearchDto, Integer pageNumber, Integer pageSize) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<TagEntity> criteriaQuery = tagCriteriaBuilder.build(criteriaBuilder, tagSearchDto.getTagName());
+        CriteriaQuery<TagEntity> criteriaQuery = tagCriteriaBuilder.build(criteriaBuilder, tagSearchDto);
 
         TypedQuery<TagEntity> query = entityManager.createQuery(criteriaQuery);
 
@@ -56,13 +71,11 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     @Override
-    public TagEntity findTagByName(String tagName) {
-        Optional<TagEntity> tagByName = entityManager.createQuery("select tagEntity from TagEntity tagEntity where name=:tagName")
+    public Optional<TagEntity> findTagByName(String tagName) {
+        return (Optional<TagEntity>) entityManager.createQuery("select tagEntity from TagEntity tagEntity where name=:tagName")
                 .setParameter("tagName", tagName)
                 .getResultStream()
                 .findFirst();
-
-        return tagByName.orElse(null);
     }
 
     @Override
@@ -78,17 +91,7 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     @Override
-    public TagEntity findMostWidelyUsedUserTag(Long userId) {
-        return entityManager.createQuery(
-                "SELECT te FROM OrderEntity o " +
-                        "JOIN o.giftCertificateEntity gc " +
-                        "JOIN gc.tagEntities te " +
-                        "WHERE o.userEntity.id = :userId " +
-                        "GROUP BY te.id " +
-                        "ORDER BY te.id DESC "
-                , TagEntity.class)
-                .setParameter("userId", userId)
-                .setMaxResults(1)
-                .getSingleResult();
+    public TagEntity findMostWidelyUsedUserTag() {
+        return (TagEntity) entityManager.createNativeQuery(SELECT_MOST_WIDELY_USED_USER_TAG, TagEntity.class).getSingleResult();
     }
 }

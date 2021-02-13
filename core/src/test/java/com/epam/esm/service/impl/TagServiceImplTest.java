@@ -14,6 +14,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 class TagServiceImplTest {
@@ -62,7 +63,7 @@ class TagServiceImplTest {
 
     @Test
     void getTagByPartName() {
-        Mockito.when(tagRepository.findTagByPartName(Mockito.any(TagSearchDto.class), Mockito.anyInt(), Mockito.anyInt())).thenReturn(tagEntityList);
+        Mockito.when(tagRepository.findAllTags(Mockito.any(TagSearchDto.class), Mockito.anyInt(), Mockito.anyInt())).thenReturn(tagEntityList);
         List<TagDto> allTags = tagService.getTagByPartName(TagSearchDto.builder()
                 .tagName("name")
                 .build(), pageNumber, pageSize);
@@ -94,7 +95,7 @@ class TagServiceImplTest {
                 .name("name1")
                 .build();
 
-        Mockito.when(tagRepository.findTagByName(Mockito.anyString())).thenReturn(tagEntity);
+        Mockito.when(tagRepository.findTagByName(Mockito.anyString())).thenReturn(Optional.ofNullable(tagEntity));
         TagDto tagDto = tagService.getTagByName("name1");
 
         Assertions.assertEquals("name1", tagDto.getName());
