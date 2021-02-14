@@ -63,7 +63,7 @@ public class TagServiceImpl implements TagService {
     public TagDto createTag(TagDto tagDto){
         Optional<TagEntity> tagByName = tagRepository.findTagByName(tagDto.getName());
 
-        if (tagByName.isEmpty()) {
+        if (tagByName.isPresent()) {
             throw new TagNameRegisteredException();
         }
         TagEntity tagEntity = EntityConverter.convertTagDtoToEntity(tagDto);
@@ -72,7 +72,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public void deleteTagById(Long tagId){
         tagRepository.deleteTagById(tagId);
     }

@@ -27,19 +27,14 @@ public class OrderControllerImpl implements OrderController {
     private final OrderService orderService;
 
     @Override
-    @GetMapping("/user/{userId}")
-    @ResponseStatus(HttpStatus.OK)
-    public List<OrderDto> userOrders(@PathVariable Long userId, Integer pageNumber, Integer pageSize) {
-        List<OrderDto> orderDtoList = orderService.findByUserId(userId, pageNumber, pageSize);
-        orderDtoList.forEach(this::addSelfLinks);
-        return orderDtoList;
-    }
-
-    @Override
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<OrderDto> allOrders(Integer pageNumber, Integer pageSize) {
-        List<OrderDto> orderDtoList = orderService.findAll(pageNumber, pageSize);
+    public List<OrderDto> allOrders(
+            Long userId,
+            Integer pageNumber, Integer pageSize) {
+        List<OrderDto> orderDtoList = userId == null
+                ? orderService.findAll(pageNumber, pageSize)
+                : orderService.findByUserId(userId, pageNumber, pageSize);
         orderDtoList.forEach(this::addSelfLinks);
         return orderDtoList;
     }

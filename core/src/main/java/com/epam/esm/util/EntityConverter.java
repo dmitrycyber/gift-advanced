@@ -118,10 +118,11 @@ public class EntityConverter {
 
     public static OrderDto convertOrderEntityToDto(OrderEntity orderEntity){
         Timestamp purchaseDate = orderEntity.getPurchaseDate();
+        GiftCertificateEntity giftCertificateEntity = orderEntity.getGiftCertificateEntity();
         return OrderDto.builder()
                 .id(orderEntity.getId())
                 .cost(orderEntity.getCost())
-                .giftId(orderEntity.getGiftCertificateEntity().getId())
+                .giftId(giftCertificateEntity == null ? null : giftCertificateEntity.getId())
                 .purchaseDate(purchaseDate == null ? null : purchaseDate.toLocalDateTime())
                 .userId(orderEntity.getUserEntity().getId())
                 .build();

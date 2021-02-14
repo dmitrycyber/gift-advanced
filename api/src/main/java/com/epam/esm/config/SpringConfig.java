@@ -42,13 +42,6 @@ public class SpringConfig implements WebMvcConfigurer {
         return objectMapper;
     }
 
-//    @PostConstruct
-//    public ObjectMapper jacksonObjectMapper() {
-//        ObjectMapper objectMapper = objectMapper();
-//        objectMapper.registerModule(new JsonNullableModule());
-//        return objectMapper;
-//    }
-
     @Bean
     public MessageSource messageSource(@Value("${message-source.basename}") String messageSourceBaseName) {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();

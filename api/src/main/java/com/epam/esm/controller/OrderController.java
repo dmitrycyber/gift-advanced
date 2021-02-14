@@ -8,18 +8,10 @@ import java.util.List;
 
 @Api(tags = "Order Controller")
 public interface OrderController {
-
-    @ApiOperation(value = "Api v1. Get all user orders")
-    List<OrderDto> userOrders(
-            @ApiParam(name = "userId", value = "user id")
-            Long userId,
-            @ApiParam(name = "pageNumber", value = "pagination page number")
-            Integer pageNumber,
-            @ApiParam(name = "pageNumber", value = "pagination page size")
-            Integer pageSize);
-
     @ApiOperation(value = "Api v1. Get all orders")
     List<OrderDto> allOrders(
+            @ApiParam(name = "user id", value = "for get user orders")
+            Long userId,
             @ApiParam(name = "pageNumber", value = "pagination page number")
             Integer pageNumber,
             @ApiParam(name = "pageNumber", value = "pagination page size")

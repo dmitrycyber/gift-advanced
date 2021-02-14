@@ -6,8 +6,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
+import javax.persistence.PreRemove;
 import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.util.Set;
@@ -32,5 +36,12 @@ public class TagEntity extends BaseEntity {
         super(id, lastUpdate, createDate);
         this.name = name;
         this.giftCertificateEntities = giftCertificateEntities;
+    }
+
+    @PreRemove
+    private void removeTagsFromGifts() {
+        for (GiftCertificateEntity giftCertificateEntity : giftCertificateEntities) {
+            giftCertificateEntity.getTagEntities().remove(this);
+        }
     }
 }

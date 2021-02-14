@@ -5,6 +5,7 @@ import com.epam.esm.jpa.criteria.PaginationBuilder;
 import com.epam.esm.jpa.criteria.TagCriteriaBuilder;
 import com.epam.esm.jpa.exception.UserNotFoundException;
 import com.epam.esm.model.dto.search.TagSearchDto;
+import com.epam.esm.model.entity.GiftCertificateEntity;
 import com.epam.esm.model.entity.TagEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,19 +27,19 @@ public class TagRepositoryImpl implements TagRepository {
     private final TagCriteriaBuilder tagCriteriaBuilder;
 
     private static final String SELECT_MOST_WIDELY_USED_USER_TAG =
-                "SELECT t.id, t.created_date, t.last_update_date, t.name FROM orders o " +
-                "JOIN gift_certificates gc on o.gift_id = gc.id " +
-                "JOIN gift_tags gt on gc.id = gt.gift_id " +
-                "JOIN tags t on gt.tag_id = t.id " +
-                "WHERE o.user_id = " +
-                "   (SELECT user_id  " +
-                "    FROM orders o\n" +
-                "    GROUP BY user_id " +
-                "    ORDER BY sum(o.cost) desc " +
-                "    LIMIT 1) " +
-                "GROUP BY t.id, t.created_date, t.last_update_date, t.name " +
-                "ORDER BY t.id DESC " +
-                "LIMIT 1";
+            "SELECT t.id, t.created_date, t.last_update_date, t.name FROM orders o " +
+                    "JOIN gift_certificates gc on o.gift_id = gc.id " +
+                    "JOIN gift_tags gt on gc.id = gt.gift_id " +
+                    "JOIN tags t on gt.tag_id = t.id " +
+                    "WHERE o.user_id = " +
+                    "   (SELECT user_id  " +
+                    "    FROM orders o\n" +
+                    "    GROUP BY user_id " +
+                    "    ORDER BY sum(o.cost) desc " +
+                    "    LIMIT 1) " +
+                    "GROUP BY t.id, t.created_date, t.last_update_date, t.name " +
+                    "ORDER BY t.id DESC " +
+                    "LIMIT 1";
 
     @PersistenceContext
     private EntityManager entityManager;
