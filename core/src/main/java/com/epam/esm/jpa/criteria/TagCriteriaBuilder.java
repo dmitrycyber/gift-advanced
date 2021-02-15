@@ -2,6 +2,7 @@ package com.epam.esm.jpa.criteria;
 
 import com.epam.esm.model.dto.search.TagSearchDto;
 import com.epam.esm.model.entity.TagEntity;
+
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;

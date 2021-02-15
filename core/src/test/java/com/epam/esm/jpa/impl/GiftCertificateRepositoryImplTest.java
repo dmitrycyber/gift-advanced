@@ -15,6 +15,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -116,7 +117,7 @@ class GiftCertificateRepositoryImplTest {
                 .descriptionPrefix(descriptionPrefix)
                 .build();
 
-        List<GiftCertificateEntity> resultList = giftCertificateRepository.findAndSortGifts(giftSearchDto,1, 5);
+        List<GiftCertificateEntity> resultList = giftCertificateRepository.findAndSortGifts(giftSearchDto, 1, 5);
 
         Assertions.assertNotNull(resultList);
         Assertions.assertEquals(1, resultList.size());

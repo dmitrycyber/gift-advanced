@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
@@ -69,7 +70,7 @@ public class CustomContextRefreshListener implements ApplicationListener<Context
                 });
     }
 
-    private Set<TagDto> getRandomTags(List<TagDto> tags){
+    private Set<TagDto> getRandomTags(List<TagDto> tags) {
         return IntStream.range(1, 6)
                 .mapToObj(index -> tags.get(ThreadLocalRandom.current().nextInt(1, 1000)))
                 .collect(Collectors.toSet());

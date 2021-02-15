@@ -1,12 +1,14 @@
 package com.epam.esm.service;
 
 import com.epam.esm.model.dto.user.UserDto;
+
 import java.util.List;
 
 public interface UserService {
 
     /**
      * Create user
+     *
      * @param userDto entity to save
      * @return saved user
      */
@@ -14,6 +16,7 @@ public interface UserService {
 
     /**
      * Find user by user id
+     *
      * @param userId order id
      * @return UserEntity
      * @throws com.epam.esm.jpa.exception.UserNotFoundException from repository layer if such user not exist
@@ -22,10 +25,11 @@ public interface UserService {
 
     /**
      * Find all users
-     * @return List UserDto
+     *
      * @param pageNumber pagination
-     * @param pageSize pagination
-     * if fount no users - return empty list
+     * @param pageSize   pagination
+     *                   if fount no users - return empty list
+     * @return List UserDto
      */
     List<UserDto> findAll(Integer pageNumber, Integer pageSize);
 }

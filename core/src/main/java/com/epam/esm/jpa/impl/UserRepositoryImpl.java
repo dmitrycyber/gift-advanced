@@ -6,6 +6,7 @@ import com.epam.esm.jpa.exception.UserNotFoundException;
 import com.epam.esm.model.entity.UserEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -28,7 +29,7 @@ public class UserRepositoryImpl implements UserRepository {
     public UserEntity findById(Long userId) {
         UserEntity userEntity = entityManager.find(UserEntity.class, userId);
 
-        if (userEntity == null){
+        if (userEntity == null) {
             throw new UserNotFoundException(userId.toString());
         }
         return userEntity;

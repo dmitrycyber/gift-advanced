@@ -17,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -55,7 +56,7 @@ class GiftServiceImplTest {
                         .id(index)
                         .name("name" + index)
                         .build())
-        .collect(Collectors.toSet());
+                .collect(Collectors.toSet());
 
         LongStream.range(1, 6)
                 .forEach(index -> {

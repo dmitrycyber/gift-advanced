@@ -20,7 +20,8 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true, exclude = {
         "giftCertificateEntities"
 })
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "tags")

@@ -8,6 +8,7 @@ import com.epam.esm.model.entity.GiftCertificateEntity;
 import com.epam.esm.model.entity.OrderEntity;
 import com.epam.esm.model.entity.TagEntity;
 import com.epam.esm.model.entity.UserEntity;
+
 import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.util.HashSet;
@@ -79,7 +80,7 @@ public class EntityConverter {
 
         Set<OrderDto> orderDtoSet = new HashSet<>();
 
-        if (orderEntities != null){
+        if (orderEntities != null) {
             orderDtoSet = orderEntities.stream()
                     .map(EntityConverter::convertOrderEntityToDto)
                     .collect(Collectors.toSet());
@@ -95,12 +96,12 @@ public class EntityConverter {
                 .build();
     }
 
-    public static UserEntity convertUserDtoToEntity(UserDto userDto){
+    public static UserEntity convertUserDtoToEntity(UserDto userDto) {
         @Valid Set<OrderDto> orderDtoSet = userDto.getOrders();
 
         Set<OrderEntity> orderEntities = new HashSet<>();
 
-        if (orderDtoSet != null){
+        if (orderDtoSet != null) {
             orderEntities = orderDtoSet.stream()
                     .map(EntityConverter::convertOrderDtoToEntity)
                     .collect(Collectors.toSet());
@@ -116,7 +117,7 @@ public class EntityConverter {
                 .build();
     }
 
-    public static OrderDto convertOrderEntityToDto(OrderEntity orderEntity){
+    public static OrderDto convertOrderEntityToDto(OrderEntity orderEntity) {
         Timestamp purchaseDate = orderEntity.getPurchaseDate();
         GiftCertificateEntity giftCertificateEntity = orderEntity.getGiftCertificateEntity();
         return OrderDto.builder()
@@ -128,7 +129,7 @@ public class EntityConverter {
                 .build();
     }
 
-    public static OrderEntity convertOrderDtoToEntity(OrderDto orderDto){
+    public static OrderEntity convertOrderDtoToEntity(OrderDto orderDto) {
 
         return OrderEntity.builder()
                 .id(orderDto.getId())

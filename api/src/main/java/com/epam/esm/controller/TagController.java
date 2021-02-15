@@ -6,6 +6,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.http.ResponseEntity;
+
 import java.util.List;
 
 @Api(tags = "Tag Controller")
@@ -13,11 +14,11 @@ public interface TagController {
     @ApiOperation(value = "Api v1. Get all tags")
     ResponseEntity<List<TagDto>> allTags(
             @ApiParam(name = "tagSearchDto", value = "Search tags by parameters")
-            TagSearchDto tagSearchDto,
+                    TagSearchDto tagSearchDto,
             @ApiParam(name = "pageNumber", value = "pagination page number")
-            Integer pageNumber,
+                    Integer pageNumber,
             @ApiParam(name = "pageNumber", value = "pagination page size")
-            Integer pageSize);
+                    Integer pageSize);
 
     @ApiOperation(value = "Api v1. Get tag by id")
     ResponseEntity<TagDto> tagById(Long id);

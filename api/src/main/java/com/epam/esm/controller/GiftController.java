@@ -15,11 +15,11 @@ public interface GiftController {
     @ApiOperation(value = "Api v1. Get all gifts")
     ResponseEntity<List<GiftCertificateDto>> allGifts(
             @ApiParam(name = "customSearchRequestDto", value = "Search and sort gift certificates by parameters")
-            GiftSearchDto giftSearchDto,
+                    GiftSearchDto giftSearchDto,
             @ApiParam(name = "pageNumber", value = "pagination page number")
-            Integer pageNumber,
+                    Integer pageNumber,
             @ApiParam(name = "pageNumber", value = "pagination page size")
-            Integer pageSize);
+                    Integer pageSize);
 
     @ApiOperation(value = "Api v1. Get gift by id")
     ResponseEntity<GiftCertificateDto> giftById(Long id);
