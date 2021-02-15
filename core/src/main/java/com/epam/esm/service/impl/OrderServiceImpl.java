@@ -2,6 +2,7 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.jpa.GiftCertificateRepository;
 import com.epam.esm.jpa.OrderRepository;
+import com.epam.esm.jpa.UserRepository;
 import com.epam.esm.model.dto.order.OrderDto;
 import com.epam.esm.model.entity.GiftCertificateEntity;
 import com.epam.esm.model.entity.OrderEntity;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final GiftCertificateRepository giftCertificateRepository;
+    private final UserRepository userRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -52,6 +54,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderDto createOrder(OrderDto orderDto) {
         Long giftId = orderDto.getGiftId();
         GiftCertificateEntity giftCertificateEntity = giftCertificateRepository.findById(giftId);
+        userRepository.findById(orderDto.getUserId());
 
         OrderEntity orderEntity = EntityConverter.convertOrderDtoToEntity(orderDto);
         orderEntity.setCost(giftCertificateEntity.getPrice());

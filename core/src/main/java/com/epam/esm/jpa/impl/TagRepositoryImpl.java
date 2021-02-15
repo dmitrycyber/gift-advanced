@@ -5,13 +5,11 @@ import com.epam.esm.jpa.criteria.PaginationBuilder;
 import com.epam.esm.jpa.criteria.TagCriteriaBuilder;
 import com.epam.esm.jpa.exception.UserNotFoundException;
 import com.epam.esm.model.dto.search.TagSearchDto;
-import com.epam.esm.model.entity.GiftCertificateEntity;
 import com.epam.esm.model.entity.TagEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.GetMapping;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -33,9 +31,9 @@ public class TagRepositoryImpl implements TagRepository {
                     "JOIN tags t on gt.tag_id = t.id " +
                     "WHERE o.user_id = " +
                     "   (SELECT user_id  " +
-                    "    FROM orders o\n" +
+                    "    FROM orders o " +
                     "    GROUP BY user_id " +
-                    "    ORDER BY sum(o.cost) desc " +
+                    "    ORDER BY sum(o.cost) DESC " +
                     "    LIMIT 1) " +
                     "GROUP BY t.id, t.created_date, t.last_update_date, t.name " +
                     "ORDER BY t.id DESC " +

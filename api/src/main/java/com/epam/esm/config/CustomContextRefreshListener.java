@@ -36,7 +36,6 @@ public class CustomContextRefreshListener implements ApplicationListener<Context
         createUsers();
         createGiftsWithTags();
         createOrders();
-
     }
 
     private void createOrders() {

@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.hateoas.RepresentationModel;
 import javax.validation.Valid;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
@@ -31,6 +32,7 @@ public class UserDto extends RepresentationModel<UserDto> implements Serializabl
     private String lastName;
 
     @Size(min = 2, max = 45)
+    @Email
     @NotNull(groups = {CreatingDto.class})
     private String email;
 

@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -103,11 +104,7 @@ public class GiftServiceImpl implements GiftService {
 
         Set<OrderEntity> orderEntities = giftCertificateEntity.getOrderEntities();
 
-        if (orderEntities != null){
-            orderEntities.forEach(orderEntity -> {
-                orderEntity.setGiftCertificateEntity(null);
-            });
-        }
+        orderEntities.forEach(orderEntity -> orderEntity.setGiftCertificateEntity(null));
 
         giftCertificateRepository.deleteGift(giftId);
     }

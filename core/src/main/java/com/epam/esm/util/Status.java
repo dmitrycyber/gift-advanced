@@ -7,6 +7,7 @@ public enum Status {
     ORDER_NOT_FOUND(40404),
     VALIDATION_EXCEPTION(40002),
     TAG_NAME_ALREADY_REGISTERED(40003),
+    PAGINATION(40004),
     DEFAULT(1099);
 
     private Integer code;
